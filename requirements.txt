@@ -1,0 +1,14 @@
+attrs==19.1.0
+Click==7.0
+Flask==1.1.1
+Flask-MySQL==1.4.0
+itsdangerous==1.1.0
+Jinja2==2.10.1
+jsonschema==3.0.2
+MarkupSafe==1.1.1
+numpy==1.17.0
+PyMySQL==0.9.3
+pyrsistent==0.15.4
+six==1.12.0
+virtualenv==16.7.2
+Werkzeug==0.15.5

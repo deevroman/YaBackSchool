@@ -10,18 +10,13 @@ from flask import request
 from flaskext.mysql import MySQL
 from jsonschema import validate
 from pymysql.cursors import DictCursor
+from config import Config
 
 app = Flask(__name__)
-mysql = MySQL(cursorclass=DictCursor)
-
-# TODO вынести в конфиг
-# TODO периписать на abort(400, message)
-app.config['MYSQL_DATABASE_USER'] = 'roman'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'uM70mc'
-app.config['MYSQL_DATABASE_DB'] = 'imports'
-app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+app.config.from_object(Config)
 app.config['JSON_AS_ASCII'] = False
 
+mysql = MySQL(cursorclass=DictCursor)
 mysql.init_app(app)
 conn = mysql.connect()
 cursor = conn.cursor()
