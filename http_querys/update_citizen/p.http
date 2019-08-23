@@ -1,0 +1,19 @@
+PATCH /imports/106/citizens/1
+Host: localhost:8080 
+Content-type: application/json
+
+{
+	"relatives": [3]
+}
+
+###
+
+PATCH /imports/107/citizens/1
+Host: localhost:8080
+Content-type: application/json
+
+{
+
+}
+
+###

@@ -1,0 +1,4 @@
+GET /imports/106/citizens/birthdays
+Host: localhost:8080
+
+###

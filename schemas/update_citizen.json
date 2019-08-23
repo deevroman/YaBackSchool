@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "citizen",
+  "type": "object",
+  "properties": {
+    "town": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "[а-яА-ЯёЁ|\\d]"
+    },
+    "street": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "[а-яА-ЯёЁ|\\d]"
+    },
+    "building": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "[а-яА-ЯёЁ|\\d]"
+    },
+    "apartment": {
+      "type": "integer",
+      "min": 0
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "birth_date": {
+      "minLength": 10,
+      "maxLength": 10,
+      "pattern": "[\\d|.]"
+    },
+    "gender": {
+      "type": "string",
+      "enum": [
+        "male",
+        "female"
+      ]
+    },
+    "relatives": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "integer"
+      }
+    }
+  },
+  "minProperties": 1
+}
