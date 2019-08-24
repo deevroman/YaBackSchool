@@ -39,7 +39,7 @@ def imports():
     graph = {i['citizen_id']: set(i['relatives']) for i in data}
     for i in graph:
         for j in graph[i]:
-            if i not in graph[j]:
+            if j not in graph or i not in graph[j]:
                 return make_response(jsonify("Invalid data. Invalid relatives."), 400)
     today = datetime.today()
     for i in range(len(data)):
@@ -59,7 +59,7 @@ def imports():
     sql_create_table_import = f"""
             create table imports_{import_id}
             (
-            citizen_id int null,
+            citizen_id int,
             town text null,
             street text null,
             building text null,
@@ -143,11 +143,11 @@ def update_citizen(import_id, citizen_id):
         elif i == 'relatives':
             before = set(user_info['relatives'])
             after = set(data['relatives'])
-            for i in before:
-                if i not in after:
+            for j in before:
+                if j not in after:
                     citizens_for_delete.append(tuple(str(i)))
-            for i in after:
-                if i not in before:
+            for j in after:
+                if j not in before:
                     citizens_for_add.append(tuple(str(i)))
             user_info['relatives'] = data['relatives']
         else:
