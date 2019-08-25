@@ -43,7 +43,7 @@ def imports():
                 return make_response(jsonify("Invalid data. Invalid relatives."), 400)
     today = datetime.today()
     for i in range(len(data)):
-        data[i]['relatives'] = json.dumps(data[i]['relatives'])
+        data[i]['relatives'] = json.dumps(sorted(data[i]['relatives']))
         try:
             tmp_date = datetime.strptime(data[i]['birth_date'], "%d.%m.%Y")
             if tmp_date >= today:
@@ -114,9 +114,9 @@ def update_citizen(import_id, citizen_id):
     try:
         cursor.execute(sql_cit_info)
         if cursor.rowcount == 0:
-            return make_response(jsonify("Invalid query. Invalid citizen_id"), 400)
+            return make_response(jsonify("Invalid query. Invalid citizen_id"), 404)
     except:
-        return make_response(jsonify("Invalid query. Invalid import_id"), 400)
+        return make_response(jsonify("Invalid query. Invalid import_id"), 404)
 
     user_info = cursor.fetchone()
     user_info['relatives'] = json.loads(user_info['relatives'])
@@ -145,14 +145,14 @@ def update_citizen(import_id, citizen_id):
             after = set(data['relatives'])
             for j in before:
                 if j not in after:
-                    citizens_for_delete.append(tuple(str(i)))
+                    citizens_for_delete.append(tuple(str(j)))
             for j in after:
                 if j not in before:
-                    citizens_for_add.append(tuple(str(i)))
+                    citizens_for_add.append(tuple(str(j)))
             user_info['relatives'] = data['relatives']
         else:
             user_info[i] = data[i]
-    user_info['relatives'] = json.dumps(user_info['relatives'])
+    user_info['relatives'] = json.dumps(sorted(user_info['relatives']))
     sql_update_citizen = f"""
         UPDATE `imports_{import_id}`
     SET
@@ -197,6 +197,7 @@ def update_citizen(import_id, citizen_id):
     cursor.executemany(sql_update_relatives, citizens_for_update)
     conn.commit()
     user_info['relatives'] = json.loads(user_info['relatives'])
+    user_info['birth_date'] = datetime.strftime(datetime.strptime(user_info['birth_date'], "%Y-%m-%d"), "%d.%m.%Y")
     return make_response(jsonify({'data': user_info}), 200)
 
 
@@ -208,10 +209,11 @@ def get_imports(import_id):
     try:
         cursor.execute(sql_get_import)
     except:
-        return make_response(jsonify("Invalid import_id"), 400)
+        return make_response(jsonify("Invalid import_id"), 404)
     rows = cursor.fetchall()
     for i in range(len(rows)):
         rows[i]['relatives'] = json.loads(rows[i]['relatives'])
+        rows[i]['birth_date'] = datetime.strftime(rows[i]['birth_date'], "%d.%m.%Y")
     return make_response(jsonify({'data': rows}), 200)
 
 
@@ -223,7 +225,7 @@ def get_birthdays(import_id):
     try:
         cursor.execute(sql_get_birthdays)
     except:
-        return make_response(jsonify("Invalid import_id"), 400)
+        return make_response(jsonify("Invalid import_id"), 404)
     rows = cursor.fetchall()
     presents = {str(i): {} for i in range(1, 12 + 1)}
     for i in rows:
@@ -244,7 +246,6 @@ def get_birthdays(import_id):
 def get_percentile_age(import_id):
     sql_get_import = f"""
         SELECT 
-        `citizen_id`,
         `town`,
         (TIMESTAMPDIFF(YEAR, birth_date, UTC_TIMESTAMP())) as age 
         FROM `imports_{import_id}`
@@ -252,13 +253,13 @@ def get_percentile_age(import_id):
     try:
         cursor.execute(sql_get_import)
     except:
-        return make_response(jsonify("Invalid import_id"), 400)
+        return make_response(jsonify("Invalid import_id"), 404)
     rows = [[i[j] for j in i] for i in cursor.fetchall()]
-    rows.sort(key=itemgetter(1))
+    rows.sort(key=itemgetter(0))
     result = []
-    for elt, items in groupby(rows, itemgetter(1)):
-        p50, p75, p99 = np.percentile(np.array([i[2] for i in items]), q=[50, 75, 99]).round(2).tolist()
-        result.append({elt: {'p50': p50, 'p75': p75, 'p99': p99}})
+    for elt, items in groupby(rows, itemgetter(0)):
+        p50, p75, p99 = np.percentile(np.array([i[1] for i in items]), q=[50, 75, 99]).round(2).tolist()
+        result.append({'town': elt, 'p50': p50, 'p75': p75, 'p99': p99})
     return make_response(jsonify({'data': result}), 200)
 
 

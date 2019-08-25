@@ -13,7 +13,7 @@
           "citizen_id": {
             "type": "integer",
             "min": 0,
-            "unique" : true
+            "unique": true
           },
           "town": {
             "type": "string",
