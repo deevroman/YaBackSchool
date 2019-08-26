@@ -104,7 +104,7 @@ ln -s /etc/nginx/sites-available/YaBackSchool /etc/nginx/sites-enabled
 systemctl restart nginx
 ```
 
-### Запуск тестов:
+### Запуск тестов
 Установите pytest:
 ```sudo apt install python3-pytest```
 
