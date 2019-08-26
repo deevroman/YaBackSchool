@@ -40,7 +40,7 @@ class MyTestCase(unittest.TestCase):
              "building": "16к7стр5", "apartment": 7,
              "name": "Иванов Иван Иванович", "birth_date": "20.08." + str(random.randint(1948, 2018)), "gender": "male",
              "relatives": []}
-            for i in range(1000)
+            for i in range(10000)
         ]}
         response = requests.post(url + "/imports", json=data, timeout=10)
         self.assertEqual(response.status_code, 201)
