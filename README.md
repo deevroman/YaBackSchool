@@ -20,22 +20,28 @@
 Клонируйте данный репозиторий себе на машину
 
 Установите virtualenv
+
 ```pip install virtualenv```
 
 Перейдите в созданную директорию
+
 ```cd YaBackSchool```
 
 Создайте новое виртуальное окружение
+
 ```virtualenv env```
 
 Активируйте его
+
 ```source env/bin/activate```
 
 Установите зависимости
+
 ```pip install -r requirements.txt```
     
 #### Настрайка базы данных
 Любым удобным вам способом подключитесь к базе данных, например:
+
 ```mysql -u root -p```
 
 Создайте нового пользователя. Для этого выполните следующие запросы.
@@ -56,14 +62,17 @@ create table `imports` ( id int auto_increment, constraint imports_pk primary ke
 
 #### Настройка uWSGI и nginx
 Установите nginx:
+
 ```sudo apt-get install nginx```
 
 Примечание:
 Далее вместо /home/entrant используйте путь к директории, в которую вы клонировали проект
 
 
-Добавлем сервис в автозагрузку. Для этого необходимо создать несколько файлов.
+Добавлем сервис в автозагрузку. Для этого необходимо создать несколько файлов
+
 ```sudo vim /etc/systemd/system/YaBackSchool.service```
+
 Добавьте следующие строки:
 ```
 [Unit]
@@ -84,6 +93,7 @@ systemctl start YaBackSchool
 systemctl enable YaBackSchool
 ```   
 Настроиваем nginx:
+
 ```sudo vim /etc/nginx/sites-available/YaBackSchool```
 
 Добавляем следующие строки:
